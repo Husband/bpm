@@ -22,7 +22,7 @@ new Vue({
         },
         deleteCategory(data) {
             //@todo implement
-            ProcessMaker.apiClient.delete('category/' + data.uid)
+            ProcessMaker.apiClient.delete('categories/' + data.uid)
                 .then(response => {
                     ProcessMaker.alert('Category Successfully Deleted', 'success');
                     this.reload();

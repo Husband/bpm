@@ -14,8 +14,7 @@ class ProcessCategoryTest extends TestCase
 {
     use DatabaseTransactions;
 
-    const API_TEST_CATEGORY = '/api/1.0/category/';
-    const API_TEST_CATEGORIES = '/api/1.0/categories';
+    const API_TEST_CATEGORIES = '/api/1.0/categories/';
     
     private $testUser = null;
 
@@ -200,7 +199,7 @@ class ProcessCategoryTest extends TestCase
             "name" => $processCategory->name,
             "status" => $processCategory->status,
         ];
-        $response = $this->api('POST', self::API_TEST_CATEGORY, $data);
+        $response = $this->api('POST', self::API_TEST_CATEGORIES, $data);
         $response->assertStatus(201);
         $response->assertJsonStructure();
         $processCategoryJson = $response->json();
@@ -217,7 +216,7 @@ class ProcessCategoryTest extends TestCase
         );
 
         //Validate required name
-        $response = $this->api('POST', self::API_TEST_CATEGORY, []);
+        $response = $this->api('POST', self::API_TEST_CATEGORIES, []);
         $response->assertStatus(422);
         $this->assertEquals(
             __('validation.required', ['attribute' => 'name']),
@@ -225,7 +224,7 @@ class ProcessCategoryTest extends TestCase
         );
 
         //Validate creation of duplicated category
-        $response = $this->api('POST', self::API_TEST_CATEGORY, $data);
+        $response = $this->api('POST', self::API_TEST_CATEGORIES, $data);
         $response->assertStatus(422);
         $this->assertEquals(
             __('validation.unique', ['attribute' => 'name']),
@@ -237,7 +236,7 @@ class ProcessCategoryTest extends TestCase
             "name" => $faker->sentence(100),
             "status" => $processCategory->status,
         ];
-        $response = $this->api('POST', self::API_TEST_CATEGORY, $data);
+        $response = $this->api('POST', self::API_TEST_CATEGORIES, $data);
         $response->assertStatus(422);
         $this->assertEquals(
             __('validation.max.string', ['attribute' => 'name', 'max' => 100]),
@@ -259,7 +258,7 @@ class ProcessCategoryTest extends TestCase
             "name" => $faker->name(),
             "status" => ProcessCategory::STATUS_ACTIVE,
         ];
-        $response = $this->api('PUT', self::API_TEST_CATEGORY . $catUid, $data);
+        $response = $this->api('PUT', self::API_TEST_CATEGORIES . $catUid, $data);
         $response->assertStatus(200);
         $response->assertJsonStructure();
         $processCategoryJson = $response->json();
@@ -270,7 +269,7 @@ class ProcessCategoryTest extends TestCase
         $this->assertEquals($processCategory->name, $data['name']);
 
         //Validate required name
-        $response = $this->api('PUT', self::API_TEST_CATEGORY . $catUid, ["name" => '']);
+        $response = $this->api('PUT', self::API_TEST_CATEGORIES . $catUid, ["name" => '']);
         $response->assertStatus(422);
         $this->assertEquals(
             __('validation.required', ['attribute' => 'name']),
@@ -278,14 +277,14 @@ class ProcessCategoryTest extends TestCase
         );
 
         //Validate 404 if category does not exists
-        $response = $this->api('PUT', self::API_TEST_CATEGORY . 'DOES_NOT_EXISTS', $data);
+        $response = $this->api('PUT', self::API_TEST_CATEGORIES . 'DOES_NOT_EXISTS', $data);
         $response->assertStatus(404);
 
         //Validate that category name is unique
         $data = [
             "name" => $processCategoryExisting->name,
         ];
-        $response = $this->api('PUT', self::API_TEST_CATEGORY . $catUid, $data);
+        $response = $this->api('PUT', self::API_TEST_CATEGORIES . $catUid, $data);
         $response->assertStatus(422);
         $this->assertEquals(
             __('validation.unique', ['attribute' => 'name']),
@@ -296,7 +295,7 @@ class ProcessCategoryTest extends TestCase
         $data = [
             "name" => $faker->sentence(100),
         ];
-        $response = $this->api('PUT', self::API_TEST_CATEGORY . $catUid, $data);
+        $response = $this->api('PUT', self::API_TEST_CATEGORIES . $catUid, $data);
         $response->assertStatus(422);
         $this->assertEquals(
             __('validation.max.string', ['attribute' => 'name', 'max' => 100]),
@@ -312,11 +311,11 @@ class ProcessCategoryTest extends TestCase
         $processCategory = factory(ProcessCategory::class)->create();
         $catUid = $processCategory->uid;
 
-        $response = $this->api('DELETE', self::API_TEST_CATEGORY . $catUid);
+        $response = $this->api('DELETE', self::API_TEST_CATEGORIES . $catUid);
         $response->assertStatus(204);
 
         //Validate 404 if category does not exists
-        $response = $this->api('DELETE', self::API_TEST_CATEGORY . 'DOES_NOT_EXISTS');
+        $response = $this->api('DELETE', self::API_TEST_CATEGORIES . 'DOES_NOT_EXISTS');
         $response->assertStatus(404);
 
         //Validate to do not delete category with processes
@@ -336,7 +335,7 @@ class ProcessCategoryTest extends TestCase
         $processCategory = factory(ProcessCategory::class)->create();
         $catUid = $processCategory->uid;
 
-        $response = $this->api('GET', self::API_TEST_CATEGORY . $catUid);
+        $response = $this->api('GET', '/api/1.0/categories/' . $catUid);
         $response->assertStatus(200);
         $response->assertJsonStructure();
         $processCategoryJson = $response->json();
@@ -344,7 +343,7 @@ class ProcessCategoryTest extends TestCase
         $this->assertEquals($processCategory->name, $processCategoryJson['name']);
 
         //Validate 404 if category does not exists
-        $response = $this->api('GET', self::API_TEST_CATEGORY . 'DOES_NOT_EXISTS');
+        $response = $this->api('GET', self::API_TEST_CATEGORIES . 'DOES_NOT_EXISTS');
         $response->assertStatus(404);
     }
 }

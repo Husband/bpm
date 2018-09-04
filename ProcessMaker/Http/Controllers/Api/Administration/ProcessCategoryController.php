@@ -57,55 +57,55 @@ class ProcessCategoryController extends Controller
     {
         $data = $request->json()->all();
 
-        $processCategory = new ProcessCategory();
-        $processCategory->uid = str_replace('-', '', Uuid::uuid4());
-        $processCategory->fill($data);
-        $processCategory->saveOrFail();
+        $category = new ProcessCategory();
+        $category->uid = str_replace('-', '', Uuid::uuid4());
+        $category->fill($data);
+        $category->saveOrFail();
 
 
-        return fractal($processCategory, new ProcessCategoryTransformer())->respond(201);
+        return fractal($category, new ProcessCategoryTransformer())->respond(201);
     }
 
     /**
      * Update a process category.
      *
      * @param Request $request
-     * @param ProcessCategory $processCategory
+     * @param ProcessCategory $category
      *
      * @return array
      */
-    public function update(Request $request, ProcessCategory $processCategory)
+    public function update(Request $request, ProcessCategory $category)
     {
         $data = $request->json()->all();
-        $processCategory->fill($data);
-        $processCategory->saveOrFail();
+        $category->fill($data);
+        $category->saveOrFail();
         
-        return fractal($processCategory, new ProcessCategoryTransformer())->respond(200);
+        return fractal($category, new ProcessCategoryTransformer())->respond(200);
     }
 
     /**
      * Remove a process category.
      *
-     * @param ProcessCategory $processCategory
+     * @param ProcessCategory $category
      *
      * @return array
      */
-    public function destroy(ProcessCategory $processCategory)
+    public function destroy(ProcessCategory $category)
     {
-        $processCategory->delete();
+        $category->delete();
         return response('', 204);
     }
 
     /**
      * Show the properties of a process category.
      *
-     * @param ProcessCategory $processCategory
+     * @param ProcessCategory $category
      *
      * @return array
      */
-    public function show(ProcessCategory $processCategory)
+    public function show(ProcessCategory $category)
     {
-        return fractal($processCategory, new ProcessCategoryTransformer())
+        return fractal($category, new ProcessCategoryTransformer())
                ->respond();
     }
 }

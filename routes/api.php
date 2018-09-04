@@ -55,12 +55,8 @@ Route::group([
         Route::get('project/{process}/database-connection/{dbSource}', 'Project\DatabaseConnectionController@show');
         Route::post('project/{process}/database-connection/test', 'Project\DatabaseConnectionController@testConnection');
 
-        //Process Category endpoints.
-        Route::get('categories', 'Administration\ProcessCategoryController@index');
-        Route::get('category/{processCategory}', 'Administration\ProcessCategoryController@show');
-        Route::post('category', 'Administration\ProcessCategoryController@store');
-        Route::put('category/{processCategory}', 'Administration\ProcessCategoryController@update');
-        Route::delete('category/{processCategory}', 'Administration\ProcessCategoryController@destroy');
+        // Process Category endpoints.
+        Route::resource('categories', 'Administration\ProcessCategoryController');
 
         //PmTable endpoints
         Route::get('pmtable', 'Settings\PmTableController@index');
